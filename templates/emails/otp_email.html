@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your OTP Code</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      color: #333333;
+    }
+    .otp-box {
+      background-color: #f0f0f0;
+      padding: 20px;
+      border-radius: 8px;
+      font-size: 24px;
+      text-align: center;
+      font-weight: bold;
+      letter-spacing: 4px;
+      color: #222;
+      margin: 20px 0;
+    }
+    .footer {
+      font-size: 12px;
+      color: #888888;
+      text-align: center;
+      margin-top: 30px;
+    }
+    a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Hi there 👋</h2>
+    <p>You're almost set! Use the OTP below to complete your registration:</p>
+
+    <div class="otp-box">
+      {{ otp }}
+    </div>
+
+    <p>This code is valid for only a short time. If you didn't request it, you can ignore this message.</p>
+
+    <p>Need help? Reach out to our Adeniyi John anytime.</p>
+
+    <div class="footer">
+      &copy; {{ year }} Only1JohnN | All rights reserved.
+    </div>
+  </div>
+</body>
+</html>

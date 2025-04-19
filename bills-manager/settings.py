@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',  # Django REST framework for building APIs
     'rest_framework.authtoken',  # Token authentication for REST framework
     'bill',  # Custom app for managing bills
+    'accounts',  # Custom app for user accounts
     'rest_framework_simplejwt',  # JWT authentication for REST framework
     'django_celery_beat',  # For periodic tasks'
 ]
@@ -61,10 +62,16 @@ SIMPLE_JWT = {
 }
 
 # For Sending Email Notifications -- Service Provider: SendGrid
-EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
-SENDGRID_API_KEY = 'your_sendgrid_api_key'  # Replace with your actual SendGrid API key
-SENDGRID_SANDBOX_MODE_IN_DEBUG = False  # Set to True for testing in debug mode
-SENDGRID_ECHO_TO_STDOUT = True  # Prints email to console in debug mode
+# Looking to send emails in production? Check out our Email API/SMTP product!
+from decouple import config
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+
 
 
 MIDDLEWARE = [
@@ -79,11 +86,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'bills-manager.urls'
 
+import os
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [os.path.join(BASE_DIR, "templates")],  # Global templates directory
+        'APP_DIRS': True,  # Enable app-specific templates
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -96,6 +105,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'bills-manager.wsgi.application'
+
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
 
 
 # Database
@@ -143,7 +156,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),  # Global static files directory
+# ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -51,7 +51,8 @@ def recreate_bills(bill_id):
         logger.info(f"Created new bill with ID {new_bill.id} for due date {next_due_date}")
 
         # Calculate the next due date
-        next_due_date = calculate_next_due_date(bill, next_due_date)
+        next_due_date = calculate_next_due_date(bill, bill.due_date)
+
 
     logger.info(f"Finished creating recurring bills for bill ID {bill_id}")
 

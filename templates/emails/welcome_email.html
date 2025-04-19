@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Only1JohnN Bills Manager</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #0055ff;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #222;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0 0 20px;
+        }
+        .cta-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background-color: #0055ff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 50px;
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">Only1JohnN</div>
+        <h1>Welcome, {{ username }}! 🎉</h1>
+        <p>
+            We're thrilled to have you join <strong>Bills Manager</strong> — your new go-to app to simplify bill management.
+        </p>
+        <p>
+            Create, split, and manage bills with ease. Automate payments, collaborate with friends, and keep everything in check.
+        </p>
+        <p>
+            Need support? Reach out anytime — we’re here for you.
+        </p>
+        <a href="#" class="cta-button">Get Started</a>
+        <div class="footer">
+            &copy; {{ year }} Only1JohnN. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>

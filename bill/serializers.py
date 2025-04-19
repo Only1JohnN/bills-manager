@@ -13,7 +13,7 @@ class BillSerializer(serializers.ModelSerializer):
             'amount',
             'category',
             'service_provider',
-            'due_date',
+            'due_date', 
             'next_due_date',
             'repeat_frequency',
             'reminder',
@@ -24,7 +24,7 @@ class BillSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id','created_at', 'updated_at']
 
     def validate_amount(self, value):
         if value <= 0:
@@ -47,6 +47,7 @@ class BillSerializer(serializers.ModelSerializer):
         bill = super().create(validated_data)
 
         if bill.repeat_frequency != Bill.RepeatFrequency.DO_NOT_REPEAT:
+            print(f"Triggering recreate_bills task for bill {bill.id}")
             recreate_bills.delay(bill.id)  # Pass the new bill's ID
 
         return bill

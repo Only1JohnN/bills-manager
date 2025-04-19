@@ -1,5 +1,5 @@
+from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import User
 
 class Bill(models.Model):
     class RepeatFrequency(models.TextChoices):
@@ -30,7 +30,7 @@ class Bill(models.Model):
         MEDIUM = 'medium', 'Medium'
         LOW = 'low', 'Low'
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bills')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bills')
     bill_name = models.CharField(max_length=100, blank=True)  # Optional field
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.CharField(max_length=100)  # Required by default
@@ -59,10 +59,15 @@ class Bill(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def save(self, *args, **kwargs):
-        if not self.next_due_date and self.repeat_frequency != self.RepeatFrequency.DO_NOT_REPEAT:
-            self.next_due_date = self.due_date
+        if not self.bill_name and self.service_provider:
+            self.bill_name = self.service_provider
+
+        is_new = self.pk is None
         super().save(*args, **kwargs)
 
+        if is_new and self.repeat_frequency != self.RepeatFrequency.DO_NOT_REPEAT:
+            from .tasks import recreate_bills  # Lazy import
+            recreate_bills.delay(self.id)
 
     def __str__(self):
         return f"{self.bill_name or self.service_provider} - {self.user.username}"
