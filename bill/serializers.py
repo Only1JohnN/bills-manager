@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Bill
 from datetime import date
+from .tasks import recreate_bills
+
 
 class BillSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,6 +14,7 @@ class BillSerializer(serializers.ModelSerializer):
             'category',
             'service_provider',
             'due_date',
+            'next_due_date',
             'repeat_frequency',
             'reminder',
             'priority',
@@ -41,4 +44,9 @@ class BillSerializer(serializers.ModelSerializer):
         if not validated_data.get('bill_name'):
             validated_data['bill_name'] = validated_data.get('service_provider', 'Unnamed Bill')
 
-        return super().create(validated_data)
+        bill = super().create(validated_data)
+
+        if bill.repeat_frequency != Bill.RepeatFrequency.DO_NOT_REPEAT:
+            recreate_bills.delay(bill.id)  # Pass the new bill's ID
+
+        return bill

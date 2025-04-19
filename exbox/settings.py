@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',  # Django REST framework for building APIs
     'rest_framework.authtoken',  # Token authentication for REST framework
     'bill',  # Custom app for managing bills
+    'rest_framework_simplejwt',  # JWT authentication for REST framework
+    'django_celery_beat',  # For periodic tasks'
 ]
 
 REST_FRAMEWORK = {
@@ -47,6 +49,15 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),  # Access token expires in 7 days
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Refresh token expires in 7 days
+    'ROTATE_REFRESH_TOKENS': False,                 # Disable refresh token rotation
+    'BLACKLIST_AFTER_ROTATION': False,              # Disable blacklisting after rotation
 }
 
 MIDDLEWARE = [

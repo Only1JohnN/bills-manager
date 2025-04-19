@@ -6,9 +6,9 @@ class Bill(models.Model):
         DO_NOT_REPEAT = 'do_not_repeat', 'Do not repeat'
         DAILY = 'daily', 'Daily'
         WEEKLY = 'weekly', 'Weekly'
-        BI_WEEKLY = 'bi-weekly', 'Bi-weekly'
+        BI_WEEKLY = 'bi_weekly', 'Bi-weekly'
         MONTHLY = 'monthly', 'Monthly'
-        BI_MONTHLY = 'bi-monthly', 'Bi-monthly'
+        BI_MONTHLY = 'bi_monthly', 'Bi-monthly'
         ANNUALLY = 'annually', 'Annually'
         CUSTOM = 'custom', 'Custom'
 
@@ -36,6 +36,7 @@ class Bill(models.Model):
     category = models.CharField(max_length=100)  # Required by default
     service_provider = models.CharField(max_length=100)  # Required by default
     due_date = models.DateField()
+    next_due_date = models.DateField(blank=True, null=True)
     repeat_frequency = models.CharField(
         max_length=50,
         choices=RepeatFrequency.choices,
@@ -56,6 +57,12 @@ class Bill(models.Model):
     notes = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.next_due_date and self.repeat_frequency != self.RepeatFrequency.DO_NOT_REPEAT:
+            self.next_due_date = self.due_date
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"{self.bill_name or self.service_provider} - {self.user.username}"
