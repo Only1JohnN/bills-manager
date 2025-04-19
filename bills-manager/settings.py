@@ -180,3 +180,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGOUT_REDIRECT_URL = 'login'
 
+# settings.py
+
+DEFAULT_FROM_EMAIL = 'adeniyijohn2002@gmail.com'

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary-color: #0055ff;
+      --accent-color: #f0f4ff;
+      --text-color: #222;
+      --light-text: #666;
+      --background: #f9f9f9;
+      --border-radius: 12px;
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      font-family: var(--font-family);
+      color: var(--text-color);
+    }
+
+    .email-wrapper {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    .header {
+      background: var(--accent-color);
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      color: var(--primary-color);
+      font-size: 22px;
+    }
+
+    .content {
+      padding: 30px;
+      text-align: center;
+    }
+
+    .content h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .content p {
+      font-size: 16px;
+      color: var(--light-text);
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+
+    .otp-box {
+      display: inline-block;
+      margin: 20px 0;
+      padding: 16px 32px;
+      background-color: var(--accent-color);
+      border-radius: 8px;
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 4px;
+      color: var(--text-color);
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 30px;
+      background-color: var(--primary-color);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      color: #aaa;
+      background-color: #f4f4f4;
+    }
+
+    .footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrapper">
+    <div class="header">
+      <h1>Only1JohnN</h1>
+    </div>
+    <div class="content">
+      {% block content %}
+      <!-- Your specific content goes here -->
+      {% endblock %}
+    </div>
+    <div class="footer">
+      &copy; {{ year }} Only1JohnN. All rights reserved. Need help? <a href="#">Contact support</a>
+    </div>
+  </div>
+</body>
+</html>

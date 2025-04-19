@@ -202,15 +202,6 @@ The following environment variables are required for the project:
 
 ---
 
-## Testing
-
-Run the test suite using the following command:
-```bash
-python manage.py test
-```
-
----
-
 ## Deployment
 
 ### Using Gunicorn
@@ -260,21 +251,3 @@ Contributions are welcome! To contribute:
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
 ```
-
----
-
-### Key Features of This README:
-1. **Comprehensive Setup Instructions**:
-   - Covers installation, environment variables, and running the server.
-
-2. **Detailed API Documentation**:
-   - Lists all endpoints with descriptions.
-
-3. **Feature Highlights**:
-   - Explains key features like recurring bills, pagination, and email notifications.
-
-4. **Deployment Instructions**:
-   - Includes steps for deploying with Gunicorn and Docker.
-
-5. **Contributing Guidelines**:
-   - Encourages contributions with clear steps.
