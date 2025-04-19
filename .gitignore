@@ -25,3 +25,4 @@ db.sqlite3
 /static/
 *.json
 /media/
+.github/workflows/deploy.yml # Ignore deployment workflow for now
