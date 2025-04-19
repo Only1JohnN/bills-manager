@@ -60,6 +60,13 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': False,              # Disable blacklisting after rotation
 }
 
+# For Sending Email Notifications -- Service Provider: SendGrid
+EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+SENDGRID_API_KEY = 'your_sendgrid_api_key'  # Replace with your actual SendGrid API key
+SENDGRID_SANDBOX_MODE_IN_DEBUG = False  # Set to True for testing in debug mode
+SENDGRID_ECHO_TO_STDOUT = True  # Prints email to console in debug mode
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
