@@ -27,3 +27,5 @@ db.sqlite3
 *.json
 /media/
 deploy.yml
+/deploy.yml
+.github/workflows/deploy.yml
