@@ -16,7 +16,10 @@ def recreate_bills(bill_id):
         bill = Bill.objects.get(id=bill_id)
     except Bill.DoesNotExist:
         logger.error(f"Bill with ID {bill_id} does not exist.")
-        return  # Exit if the bill does not exist
+        return
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        return
 
     today = now().date()
     end_date = today.replace(year=today.year + 1)  # Generate up to 1 year from now

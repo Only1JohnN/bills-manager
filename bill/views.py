@@ -6,16 +6,20 @@ from rest_framework import status
 from django.utils.timezone import now
 from .models import Bill
 from .serializers import BillSerializer
+from .pagination import CustomBillPagination
 from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
-class BillViewSet(viewsets.ModelViewSet):
+
+
+class BillsListViewSet(viewsets.ModelViewSet):
     """
     A viewset for viewing and editing bill instances.
     """
     queryset = Bill.objects.all()
     serializer_class = BillSerializer
     permission_classes = [IsAuthenticated]  # Require authentication
+    pagination_class = CustomBillPagination  # Use the custom pagination class
     
     def get_queryset(self):
         """
@@ -33,10 +37,15 @@ class BillStatusView(APIView):
     def get(self, request):
         today = now().date()
         return Response({
-            "upcoming": BillSerializer(Bill.objects.filter(due_date__gte=today, is_paid=False), many=True).data,
-            "overdue": BillSerializer(Bill.objects.filter(due_date__lt=today, is_paid=False), many=True).data,
+            # "upcoming": BillSerializer(Bill.objects.filter(due_date__gte=today, is_paid=False), many=True).data,
+            # "overdue": BillSerializer(Bill.objects.filter(due_date__lt=today, is_paid=False), many=True).data,
+            # "recurring": BillSerializer(Bill.objects.exclude(repeat_frequency=Bill.RepeatFrequency.DO_NOT_REPEAT), many=True).data,
+            # "paid": BillSerializer(Bill.objects.filter(is_paid=True), many=True).data,
+            
+            "upcoming": BillSerializer(Bill.objects.filter(due_date__gte=today), many=True).data,
+            "overdue": BillSerializer(Bill.objects.filter(due_date__lt=today), many=True).data,
             "recurring": BillSerializer(Bill.objects.exclude(repeat_frequency=Bill.RepeatFrequency.DO_NOT_REPEAT), many=True).data,
-            "paid": BillSerializer(Bill.objects.filter(is_paid=True), many=True).data,
+            "paid": BillSerializer(Bill.objects.filter(), many=True).data,
         })
 
 

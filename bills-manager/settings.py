@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',  # Django REST framework for building APIs
     'rest_framework.authtoken',  # Token authentication for REST framework
+    'rest_framework_simplejwt.token_blacklist',  # Blacklist for JWT tokens
     'bill',  # Custom app for managing bills
     'accounts',  # Custom app for user accounts
     'rest_framework_simplejwt',  # JWT authentication for REST framework
@@ -50,8 +51,12 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+        'PAGE_SIZE': 10,  # Number of items per page,
 }
 
+
+#
 from datetime import timedelta
 
 SIMPLE_JWT = {
@@ -71,6 +76,7 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool)
 
 
 
@@ -171,3 +177,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGOUT_REDIRECT_URL = 'login'
+
