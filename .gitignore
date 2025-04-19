@@ -23,5 +23,5 @@ __pycache__/
 db.sqlite3
 /node_modules/
 /static/
-/bill_photos/
+bill_photos
 *.json
