@@ -66,7 +66,7 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': False,              # Disable blacklisting after rotation
 }
 
-# For Sending Email Notifications -- Service Provider: SendGrid
+# For Sending Email Notifications -- Service Provider: MailTrap
 # Looking to send emails in production? Check out our Email API/SMTP product!
 from decouple import config
 
