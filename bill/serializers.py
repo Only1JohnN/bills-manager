@@ -15,6 +15,8 @@ class BillSerializer(serializers.ModelSerializer):
             'service_provider',
             'due_date', 
             'next_due_date',
+            'payment_date',
+            'is_paid',
             'repeat_frequency',
             'reminder',
             'priority',
@@ -24,7 +26,13 @@ class BillSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
-        read_only_fields = ['id','created_at', 'updated_at']
+        
+        read_only_fields = [
+            'id',
+            'created_at',
+            'updated_at',
+            'payment_date'
+        ]
 
     def validate_amount(self, value):
         if value <= 0:

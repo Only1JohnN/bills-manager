@@ -18,14 +18,11 @@ __pycache__/
 *.pyd
 .env
 .env*
+*.env
 .venv
 venv/
-*.rest
 db.sqlite3
 /node_modules/
 /static/
 *.json
 /media/
-deploy.yml
-/deploy.yml
-.github/workflows/deploy.yml

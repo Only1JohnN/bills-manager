@@ -1,3 +1,5 @@
+# accounts/utils.py
+
 import random
 from django.core.cache import cache
 from django.core.mail import EmailMessage
@@ -12,7 +14,7 @@ User = get_user_model()
 
 def generate_otp(user_email):
     otp = str(random.randint(100000, 999999))
-    cache.set(user_email, otp, timeout=300)  # 5 minutes
+    cache.set(user_email, otp, timeout=300)  # Expiry time: 5 minutes
     return otp
 
 def verify_otp(user_email, otp):

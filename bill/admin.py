@@ -18,10 +18,10 @@ class BillAdmin(admin.ModelAdmin):
             'fields': ('due_date', 'next_due_date')
         }),
         ('Options', {
-            'fields': ('repeat_frequency', 'reminder', 'priority', 'auto_pay', 'attach_photo', 'notes')
+            'fields': ('repeat_frequency', 'reminder', 'priority', 'auto_pay', 'is_paid', 'attach_photo', 'notes')
         }),
         ('Timestamps', {
-            'fields': ('created_at', 'updated_at')
+            'fields': ('created_at', 'updated_at', 'payment_date')
         }),
     )
 

@@ -1,0 +1,139 @@
+@base_url = http://127.0.0.1:8000/api
+@content_type = Content-Type: application/json
+@accept = Accept: application/json
+@email = apptest@yopmail.com
+@password = Password123!
+@username = AppTest
+@first_name = App
+@last_name = Test
+@phone_number = 1234567890
+@otp = 784129
+@bill_name = Test Subscription3
+@amount = 1000.00
+@category = Entertainment
+@service_provider = Netflix2
+@due_date = 2026-03-19
+@repeat_frequency = weekly
+@reminder = 10_days_before
+@priority = medium
+@auto_pay = false
+@notes = Testing recurring bills
+@authToken = Bearer
+
+#############################################################
+### Register a new user
+POST {{base_url}}/auth/register/
+{{content_type}}
+{{accept}}
+
+{
+    "username": "{{username}}",
+    "first_name": "{{first_name}}",
+    "last_name": "{{last_name}}",
+    "email": "{{email}}",
+    "phone_number": "{{phone_number}}",
+    "password": "{{password}}",
+    "confirm_password": "{{password}}"
+}
+
+
+#############################################################
+### Verify OTP
+POST {{base_url}}/auth/verify-otp/
+{{content_type}}
+
+{
+    "email": "{{email}}",
+    "otp": "{{otp}}"
+}
+
+
+##########################################################
+### Login to the application
+POST {{base_url}}/auth/login/
+{{content_type}}
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+
+#############################################################
+### Create a new bill
+POST {{base_url}}/bills/
+{{content_type}}
+Authorization:  {{authToken}}
+
+{
+        "bill_name": "{{bill_name}}",
+        "amount": "{{amount}}",
+        "category": "{{category}}",
+        "service_provider": "{{service_provider}}",
+        "due_date": "{{due_date}}",
+        "repeat_frequency": "{{repeat_frequency}}",
+        "reminder": "{{reminder}}",
+        "priority": "{{priority}}",
+        "auto_pay": "{{auto_pay}}",
+        "attach_photo": null,
+        "notes": "{{notes}}"
+    }
+
+
+#############################################################
+### Get all bills
+GET {{base_url}}/bills/
+{{content_type}}
+Authorization: {{authToken}}
+
+
+#############################################################
+### Forgot password request
+POST {{base_url}}/auth/forgot-password/
+{{content_type}}
+{{accept}}
+
+{
+    "email": "{{email}}"
+}
+
+
+#############################################################
+### Verify OTP for forgot password
+POST {{base_url}}/auth/verify-password-otp/
+{{content_type}}
+{{accept}}
+
+{
+    "email": "{{email}}",
+    "otp": "628776"
+
+}
+
+
+#############################################################
+### Reset password
+@uidb64 = 13
+@reset_token = coimkq-b229b498f1b21f768a6d5cbca3d3d176
+POST {{base_url}}/auth/reset-password/{{uidb64}}/{{reset_token}}/
+{{content_type}}
+{{accept}}
+
+{
+  "password": "{{password}}",
+  "confirm_password": "{{password}}"
+}
+
+
+#############################################################
+### Fund Wallet
+POST {{base_url}}/auth/fund-wallet/
+{{content_type}}
+Authorization: {{authToken}}
+
+{
+  "amount": "{{amount}}",
+  "email": "{{email}}",
+  "phone_number": "{{phone_number}}",
+  "name": "{{username}}"
+}

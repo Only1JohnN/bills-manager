@@ -1,3 +1,5 @@
+# accounts/serializers.py
+
 from rest_framework import serializers
 from .models import CustomUser
 from django.contrib.auth.password_validation import validate_password
@@ -41,19 +43,34 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
     
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150, required=True, help_text="Enter your username.")
-    password = serializers.CharField(write_only=True, required=True, help_text="Enter your password.")
-    
-    class Meta:
-        fields = ['username', 'password']
-    
-    def validate(self, attrs):
-        if not CustomUser.objects.filter(username=attrs['username']).exists():
-            raise serializers.ValidationError({"username": "User does not exist."})
-        return attrs
-    def validate_password(self, value):
-        """Ensure the password is correct."""
-        user = CustomUser.objects.filter(username=self.initial_data['username']).first()
-        if user and not user.check_password(value):
-            raise serializers.ValidationError("Incorrect password or username.")
-        return value
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(write_only=True, required=True)
+
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+
+        if email and password:
+            try:
+                user = CustomUser.objects.get(email=email)
+            except CustomUser.DoesNotExist:
+                raise serializers.ValidationError({'error': 'Invalid credentials'})
+
+            if not user.check_password(password):
+                raise serializers.ValidationError({'error': 'Invalid credentials'})
+
+            if not user.is_active:
+                raise serializers.ValidationError({'error': 'User account is disabled.'})
+
+            data['user'] = user
+            return data
+        else:
+            raise serializers.ValidationError({'error': 'Email and password are required.'})
+class ResendOTPSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=False)
+    # phone_number = serializers.CharField(required=False)
+
+    def validate(self, data):
+        if not data.get('email'): # and not data.get('phone_number'):
+            raise serializers.ValidationError("Either email or phone number is required.")
+        return data

@@ -1,13 +1,28 @@
 #!/bin/bash
 
-# Upgrade pip to the latest version
+
+# === Upgrade pip to the latest version ===
 pip install --upgrade pip
 
-# Install the necessary dependencies from requirements.txt
+
+# === Install dependencies ===
+echo "📦 Installing requirements..."
 pip install -r requirements.txt
 
-# Run database migrations (ensure database is up-to-date)
+
+# === Apply database migrations ===
+echo "🛠️ Applying migrations..."
 python manage.py migrate --noinput
 
-# Collect static files (for production)
+
+# === Collect static files ===
+echo "📁 Collecting static files..."
 python manage.py collectstatic --noinput
+
+
+# === Confirm Debug settings ===
+echo "⚙️ DEBUG setting:"
+python manage.py shell -c "from django.conf import settings; print(settings.DEBUG)"
+
+
+echo "✅ Done! Deployed and running."

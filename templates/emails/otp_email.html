@@ -1,7 +1,121 @@
-{% extends 'emails/base.html' %}
-{% block content %}
-  <h2>Hello 👋</h2>
-  <p>Use the OTP below to complete your registration:</p>
-  <div class="otp-box">{{ otp }}</div>
-  <p>This code is valid for only a short time. If you didn't request this, just ignore this email.</p>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Verification Code</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .logo {
+            color: #673ab7; /* Example purple color */
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #212121;
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .verification-code {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .code-digit {
+            background-color: #eee;
+            color: #333;
+            font-size: 1.5em;
+            padding: 15px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .note {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .app-links {
+            margin-top: 30px;
+        }
+
+        .app-links a {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        .app-links img {
+            height: 40px;
+            vertical-align: middle;
+        }
+
+        .contact-info {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .contact-info a {
+            color: #2196f3; /* Example link color */
+            text-decoration: none;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">Bills Manager</div>
+        <h2>Confirm Verification Code</h2>
+        <p>Hello{{ user.username }}👋,</p>
+        <p>This is your verification code:</p>
+        <div class="verification-code-box">{{ otp }}</div>
+        <p class="note">This code is valid for only a short time. If you didn't request this, just ignore this email.</p>
+        <p>Thanks,<br>Bills Manager Team.</p>
+
+        <div class="app-links">
+            <p>Bills Manager at the touch of a button! Download our app for Android & iOS</p>
+            <a href="#"><img src="https://via.placeholder.com/140x40/000/fff?Text=Google+Play" alt="Get it on Google Play"></a>
+            <a href="#"><img src="https://via.placeholder.com/140x40/000/fff?Text=Download+on+the+Mac+App+Store" alt="Download on the Mac App Store"></a>
+        </div>
+
+        <div class="contact-info">
+            Questions or FAQ? Contact us at <a href="mailto:adeniyijohn2002@gmail.com">support@BillsManager.com</a>. If you'd rather not receive this kind of email, <a href="#">Unsubscribe</a>.
+        </div>
+    </div>
+</body>
+</html>

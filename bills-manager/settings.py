@@ -10,26 +10,27 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
+from datetime import timedelta
 from pathlib import Path
+
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k$%k*zbhbrul_p@%0=kue1vxa2m-ejd$$3qhr)gaz&zyn5c^-3'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,48 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'rest_framework',  # Django REST framework for building APIs
     'rest_framework.authtoken',  # Token authentication for REST framework
     'rest_framework_simplejwt.token_blacklist',  # Blacklist for JWT tokens
-    'bill',  # Custom app for managing bills
-    'accounts',  # Custom app for user accounts
     'rest_framework_simplejwt',  # JWT authentication for REST framework
-    'django_celery_beat',  # For periodic tasks'
+    
+    'django_celery_beat',  # For periodic tasks
+    
+    'accounts',  # Custom app for user accounts
+    'bill',  # Custom app for managing bills
 ]
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-        'PAGE_SIZE': 10,  # Number of items per page,
-}
-
-
-#
-from datetime import timedelta
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),  # Access token expires in 7 days
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Refresh token expires in 7 days
-    'ROTATE_REFRESH_TOKENS': False,                 # Disable refresh token rotation
-    'BLACKLIST_AFTER_ROTATION': False,              # Disable blacklisting after rotation
-}
-
-# For Sending Email Notifications -- Service Provider: SendGrid
-# Looking to send emails in production? Check out our Email API/SMTP product!
-from decouple import config
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool)
-
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -91,8 +61,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'bills-manager.urls'
-
-import os
 
 TEMPLATES = [
     {
@@ -112,14 +80,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bills-manager.wsgi.application'
 
-
+# Custom User Model
 AUTH_USER_MODEL = 'accounts.CustomUser'
-
-
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -127,10 +92,8 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -146,40 +109,62 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = '/static/'
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static'),  # Global static files directory
-# ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-import os
-
+# Media files (User uploaded files)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGOUT_REDIRECT_URL = 'login'
+# Django REST Framework Settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,  # Number of items per page
+}
 
-# settings.py
+# Django Simple JWT Settings
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Access token expires in 15 minutes
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Refresh token expires in 7 days
+    'ROTATE_REFRESH_TOKENS': False,  # Disable refresh token rotation
+    'BLACKLIST_AFTER_ROTATION': False,  # Disable blacklisting after rotation
+}
 
-DEFAULT_FROM_EMAIL = 'adeniyijohn2002@gmail.com'
+# Email Configuration (MailTrap as Service Provider)
+# Looking to send emails in production? Check out our Email API/SMTP product!
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='adeniyijohn2002@gmail.com')
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+    EMAIL_HOST = config('EMAIL_HOST')
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+    EMAIL_PORT = config('EMAIL_PORT', cast=int)
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+    EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool)
+
+
+# Third-Party API Keys and URLs
+SITE_DOMAIN = config('SITE_DOMAIN')
+FLW_SECRET_KEY = config('FLW_SECRET_KEY')
+FLW_PUBLIC_KEY = config('FLW_PUBLIC_KEY')
+FLW_BASE_URL = config('FLW_BASE_URL')

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 class Bill(models.Model):
     class RepeatFrequency(models.TextChoices):
@@ -37,6 +38,8 @@ class Bill(models.Model):
     service_provider = models.CharField(max_length=100)  # Required by default
     due_date = models.DateField()
     next_due_date = models.DateField(blank=True, null=True)
+    payment_date = models.DateTimeField(null=True, blank=True)
+    is_paid = models.BooleanField(default=False)
     repeat_frequency = models.CharField(
         max_length=50,
         choices=RepeatFrequency.choices,
@@ -71,3 +74,16 @@ class Bill(models.Model):
 
     def __str__(self):
         return f"{self.bill_name or self.service_provider} - {self.user.username}"
+    
+    
+    @property
+    def status(self):
+        if self.payment_date:
+            return 'paid'
+        elif self.due_date and self.due_date < timezone.now().date():
+            return 'overdue'
+        elif self.due_date and self.due_date >= timezone.now().date():
+            return 'upcoming'
+        elif self.repeat_frequency:
+            return 'recurring'
+        return None
