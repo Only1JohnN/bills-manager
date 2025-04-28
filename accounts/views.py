@@ -17,7 +17,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .utils import (
     send_otp_email, verify_otp, send_reset_password_email,
     send_password_reset_success_email, send_welcome_email,
-    build_payment_payload
 )
 
 User = get_user_model()
@@ -209,52 +208,3 @@ class LogoutView(APIView):
             return Response({'message': 'Logout Successful.'}, status=status.HTTP_204_NO_CONTENT)
         except Exception:
             return Response({"error": "Invalid refresh token"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class FundWalletView(APIView):
-    permission_classes = [IsAuthenticated]
-    
-    def post(self, request):
-        serializer = PaymentFundingSerializer(data=request.data)
-        if serializer.is_valid():
-            # Validate the request data
-            amount = serializer.validated_data['amount']
-            email = serializer.validated_data['email']
-            phone_number = serializer.validated_data['phone_number']
-            name = serializer.validated_data['name']
-            
-            # Create a transaction entry for the funding
-            tx_ref = str(uuid.uuid4())  # Generate a unique transaction reference
-            transaction = Transaction.objects.create(
-                user=request.user, 
-                tx_ref=tx_ref,
-                amount=amount,
-                status='pending'  # Initially set to pending
-            )
-            
-            # Build the payload for Flutterwave
-            payload = build_payment_payload(request.user, tx_ref, amount, email, phone_number, name)
-            headers = {
-                "Authorization": f"Bearer {settings.FLW_SECRET_KEY}",
-                "Content-Type": "application/json"
-            }
-
-            # Send request to Flutterwave to initiate payment
-            response = requests.post(
-                f"{settings.FLW_BASE_URL}/charges?tx_ref={tx_ref}",
-                json=payload,
-                headers=headers
-            )
-            
-            if response.status_code == 200:
-                payment_link = response.json().get("data", {}).get("link", "")
-                if payment_link:
-                    # Update the transaction with the correct link for user redirection
-                    transaction.status = "pending"
-                    transaction.save()
-                    return Response({"payment_url": payment_link}, status=status.HTTP_200_OK)
-                else:
-                    return Response({"error": "Error processing payment link."}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response(response.json(), status=response.status_code)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
